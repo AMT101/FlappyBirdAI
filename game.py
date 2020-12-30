@@ -28,14 +28,20 @@ def main():
     from Pipe import Pipe
     from Base import Base
 
-    bird = Bird(250, 450)
+    bird = Bird(250, 300)
+    clock = pygame.time.Clock()
 
     run = True
     while run:
+        clock.tick(40)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE or event.key == pygame.K_UP:
+                    bird.jump()
 
+        bird.move()
         draw_window(WIN, bird)
     pygame.quit()
     quit()

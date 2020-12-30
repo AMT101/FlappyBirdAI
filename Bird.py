@@ -24,8 +24,8 @@ class Bird:
         self.img = self.IMGS[0]
         self.vel = 0
         self.tilt = 0
-        self.ticks = 0
-        self.height = self.y
+        self.ticks = 0          # time: to be used in the equation of motion
+        self.height = self.y    # maximum height the bird reaches when the ticks reset
         self.img_count = 0
 
     def draw(self, win):
@@ -61,6 +61,42 @@ class Bird:
         :return: mask of the bird
         """
         return pygame.mask.from_surface(self.img)
+
+    def move(self):
+        """
+        Controls the physiscs of the bird
+        :return: None
+        """
+        self.ticks += 1
+
+        # displacement while moving down
+        acc = 3
+        displacement = (self.vel*self.ticks) + 0.5*acc*(self.ticks**2)
+
+        # fixing bird's terminal velocity
+        if displacement >= 16:
+            displacement = 16
+        elif displacement < 0:
+            displacement -= 2
+        self.y += displacement
+
+        # mechanism for tilting the bird
+        if displacement < 0 or self.y < self.height + 50:  # tilt up
+            if self.tilt < self.MAX_ROTATION:
+                self.tilt = self.MAX_ROTATION
+        else:  # tilt down
+            if self.tilt > -90:
+                self.tilt -= self.ROTATION_VELOCITY
+
+
+    def jump(self):
+        """
+        Makes the bird jump
+        :return: None
+        """
+        self.vel = -10.5
+        self.ticks = 0
+        self.height = self.y
 
 
 
