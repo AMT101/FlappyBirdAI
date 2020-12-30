@@ -84,6 +84,26 @@ class Pipe:
         # draw bottom
         win.blit(self.BOTTOM_PIPE, (self.x, self.bottom))
 
+    def collide(self, bird):
+        """
+        Checks for collision of the bird with any of the two pipes
+        :param bird: Flappy bird object
+        :return: boolean based on whether the bird has collided or not
+        """
+        bird_mask = bird.get_mask()
+        top_mask = pygame.mask.from_surface(self.TOP_PIPE)
+        bottom_mask = pygame.mask.from_surface(self.BOTTOM_PIPE)
+        top_offset = (self.x - bird.x, self.top - round(bird.y))
+        bottom_offset = (self.x - bird.x, self.bottom - round(bird.y))
+
+        b_point = bird_mask.overlap(bottom_mask, bottom_offset)
+        t_point = bird_mask.overlap(top_mask, top_offset)
+
+        if b_point or t_point:
+            return True
+
+        return False
+
 
 
 

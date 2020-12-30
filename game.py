@@ -64,6 +64,8 @@ def main():
             new_pipe = obj_pooler.PIPE_QUEUE.pop()
             new_pipe.set_reset_pipe(WIN_WIDTH+30)
         pipe.move()
+        if pipe.collide(bird):
+            print("Bird ded!!")
 
         draw_window(WIN, bird, pipe)
     pygame.quit()
