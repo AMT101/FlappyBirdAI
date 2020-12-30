@@ -14,15 +14,16 @@ bg_img = pygame.transform.scale(pygame.image.load(os.path.join("imgs", "bg.png")
 PIPE_QUEUE = []
 
 
-def add_pipe(pipe):
-    """
-    Adds the pipe that has gone out of the window to PIPE_QUEUE to be used again
-    :param pipe: pipe object that has gone out of the window
-    :return: None
-    """
-    global PIPE_QUEUE
-    PIPE_QUEUE.append(pipe)
-    print(PIPE_QUEUE)
+class ObjectPooler:
+    PIPE_QUEUE = []
+
+    def add_pipe(self, pipe):
+        """
+        Adds the pipe that has gone out of the window to PIPE_QUEUE to be used again
+        :param pipe: pipe object that has gone out of the window
+        :return: None
+        """
+        self.PIPE_QUEUE.append(pipe)
 
 
 def draw_window(win, bird, pipe):
@@ -43,8 +44,9 @@ def main():
     from Pipe import Pipe
     from Base import Base
 
+    obj_pooler = ObjectPooler()
     bird = Bird(250, 300)
-    pipe = Pipe(WIN_WIDTH+30, WIN_HEIGHT, WIN_WIDTH)
+    pipe = Pipe(WIN_WIDTH+30, WIN_HEIGHT, WIN_WIDTH, obj_pooler)
     clock = pygame.time.Clock()
 
     run = True
@@ -58,10 +60,9 @@ def main():
                     bird.jump()
 
         bird.move()
-        print(len(PIPE_QUEUE))
-        if len(PIPE_QUEUE) > 0:
-            new_pipe = PIPE_QUEUE.pop()
-            new_pipe.set_reset_x(WIN_WIDTH+30)
+        if obj_pooler.PIPE_QUEUE:
+            new_pipe = obj_pooler.PIPE_QUEUE.pop()
+            new_pipe.set_reset_pipe(WIN_WIDTH+30)
         pipe.move()
 
         draw_window(WIN, bird, pipe)
@@ -70,4 +71,5 @@ def main():
 
 
 if __name__ == '__main__':
+    PIPE_QUEUE= []
     main()

@@ -1,7 +1,6 @@
 import pygame
 import os
 import random
-import game
 
 
 class Pipe:
@@ -9,10 +8,10 @@ class Pipe:
     This class represents the Pipe
     """
     IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "pipe.png")).convert_alpha())
-    GAP = 250
+    GAP = 200
     VEL = 5
 
-    def __init__(self, x, win_height, win_width):
+    def __init__(self, x, win_height, win_width, obj_pooler):
         """
         Initializes the Pipe object
         :param x: initial x-coordinate of the pipe's position
@@ -25,12 +24,14 @@ class Pipe:
 
         self.top = 0
         self.bottom = 0
+        self.height = 0
 
         self.TOP_PIPE = pygame.transform.flip(self.IMG, False, True)
         self.BOTTOM_PIPE = self.IMG
 
         self.passed = False
         self.out_screen = False
+        self.obj_pooler = obj_pooler
 
         self.set_height()
 
@@ -39,10 +40,9 @@ class Pipe:
         Sets the height of the pipe from the top of the screen
         :return: None
         """
-        self.height = random.randrange(50, self.win_height-50)
+        self.height = random.randrange(50, self.win_height-250)
         self.top = self.height - self.TOP_PIPE.get_height()
         self.bottom = self.height + self.GAP
-
 
     def move(self):
         """
@@ -51,7 +51,7 @@ class Pipe:
         """
         self.x -= self.VEL
         # if pipe passes the screen
-        if self.x < -20 and not self.out_screen:
+        if self.x < -90 and not self.out_screen:
             self.out_screen = True
             self.reset()
 
@@ -61,7 +61,7 @@ class Pipe:
         :return: None
         """
         self.passed = False
-        game.add_pipe(self)
+        self.obj_pooler.add_pipe(self)
 
     def set_reset_pipe(self, x):
         """
@@ -72,7 +72,6 @@ class Pipe:
         self.x = x
         self.out_screen = False
         self.set_height()
-
 
     def draw(self, win):
         """
