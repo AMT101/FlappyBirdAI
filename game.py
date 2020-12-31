@@ -19,6 +19,7 @@ bg_img = pygame.transform.scale(pygame.image.load(os.path.join("imgs", "bg.png")
 
 gen = 0
 
+
 class ObjectPooler:
     PIPE_QUEUE = []
 
@@ -32,6 +33,17 @@ class ObjectPooler:
 
 
 def draw_window(win, birds, pipes, base, score, gen, pipe_ind):
+    """
+    Draws the windows for each frame
+    :param win: pygame window
+    :param birds: list of bird objects
+    :param pipes: list of pipe objects
+    :param base: Base object
+    :param score: score of the game
+    :param gen: current generation
+    :param pipe_ind: index of the pipe in front
+    :return: None
+    """
     win.blit(bg_img, (0, 0))
 
     for bird in birds:
@@ -44,6 +56,14 @@ def draw_window(win, birds, pipes, base, score, gen, pipe_ind):
     # score
     score_label = STAT_FONT.render("Score: " + str(score), 1, (255, 255, 255))
     win.blit(score_label, (WIN_WIDTH - score_label.get_width() - 15, 10))
+
+    # generations
+    score_label = STAT_FONT.render("Gens: " + str(gen - 1), 1, (255, 255, 255))
+    win.blit(score_label, (10, 10))
+
+    # alive
+    score_label = STAT_FONT.render("Alive: " + str(len(birds)), 1, (255, 255, 255))
+    win.blit(score_label, (10, 50))
 
     pygame.display.update()
 
