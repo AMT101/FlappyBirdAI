@@ -4,6 +4,7 @@ import os
 WIN_WIDTH = 600
 WIN_HEIGHT = 800
 FLOOR = 730
+PIPE_GAP = 400
 DRAW_LINES = False
 
 WIN = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
@@ -26,10 +27,13 @@ class ObjectPooler:
         self.PIPE_QUEUE.append(pipe)
 
 
-def draw_window(win, bird, pipe):
+def draw_window(win, bird, pipes, base):
     win.blit(bg_img, (0, 0))
     bird.draw(win)
-    pipe.draw(win)
+
+    for pipe in pipes:
+        pipe.draw(win)
+    base.draw(win)
 
     pygame.display.update()
 
@@ -46,7 +50,8 @@ def main():
 
     obj_pooler = ObjectPooler()
     bird = Bird(250, 300)
-    pipe = Pipe(WIN_WIDTH+30, WIN_HEIGHT, WIN_WIDTH, obj_pooler)
+    pipes = [Pipe(WIN_WIDTH+30, WIN_HEIGHT, WIN_WIDTH, obj_pooler)]
+    base = Base(WIN_HEIGHT-150)
     clock = pygame.time.Clock()
 
     run = True
@@ -60,14 +65,25 @@ def main():
                     bird.jump()
 
         bird.move()
-        if obj_pooler.PIPE_QUEUE:
-            new_pipe = obj_pooler.PIPE_QUEUE.pop()
-            new_pipe.set_reset_pipe(WIN_WIDTH+30)
-        pipe.move()
-        if pipe.collide(bird):
-            print("Bird ded!!")
+        base.move()
 
-        draw_window(WIN, bird, pipe)
+        max_x = 0
+        for pipe in pipes:
+            max_x = max(pipe.x, max_x)
+            
+        if max_x < WIN_WIDTH - PIPE_GAP:
+            if obj_pooler.PIPE_QUEUE:
+                new_pipe = obj_pooler.PIPE_QUEUE.pop()
+                new_pipe = new_pipe.set_reset_pipe(WIN_WIDTH+30)
+            else:
+                pipes.append(Pipe(WIN_WIDTH + 30, WIN_HEIGHT, WIN_WIDTH, obj_pooler))
+        for pipe in pipes:
+            pipe.move()
+
+            if pipe.collide(bird):
+                print("Bird ded!!")
+
+        draw_window(WIN, bird, pipes, base)
     pygame.quit()
     quit()
 
