@@ -8,7 +8,7 @@ class Pipe:
     This class represents the Pipe
     """
     IMG = pygame.transform.scale2x(pygame.image.load(os.path.join("imgs", "pipe.png")).convert_alpha())
-    GAP = 200
+    GAP = 220
     VEL = 5
 
     def __init__(self, x, win_height, win_width, obj_pooler):
@@ -40,7 +40,7 @@ class Pipe:
         Sets the height of the pipe from the top of the screen
         :return: None
         """
-        self.height = random.randrange(50, self.win_height-250)
+        self.height = random.randrange(50, self.win_height-300)
         self.top = self.height - self.TOP_PIPE.get_height()
         self.bottom = self.height + self.GAP
 
