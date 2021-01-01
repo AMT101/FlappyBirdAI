@@ -13,7 +13,9 @@ The eval_genomes funciton is called a given number of times with a specified num
 After one call to the eval_genomes function is over, the resulting population is created from the best performers of the previous population with some mutation. The following screen shots show the initial and intermediate stage of the whole process.
 
 This is the Initial state of the birds(before any training)
+
 ![Alt text](https://gdurl.com/HeYR "Initial State")
 
 This is the intermediate state of the birds after training for 2 generations
+
 ![Alt text](https://gdurl.com/Ts9X "Intermediate State")
